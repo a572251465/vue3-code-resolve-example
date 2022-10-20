@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="node_modules/vue/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const { createVNode, render } = Vue;
+
+      const vdom = createVNode("button", {
+        onClick: () => {
+          alert("1111")
+        },
+        innerText: "点击按钮"
+      })
+      debugger
+      render(vdom, document.getElementById("app"))
+    </script>
+
+
+    <script>
+
+      function createInvoker(event) {
+        const invoker = function () {
+          invoker.value();
+        }
+        invoker.value = event
+        return invoker;
+      }
+
+
+      function patchEvent(el, handle) {
+        // 此处用来判断分支的
+        const vei = el._vei || (el._vei = {});
+        let invoker = vei["onclick"];
+        if (invoker/* update操作 */) {
+          invoker.value = handle;
+        } else {
+          invoker = vei["onclick"] = createInvoker(handle);
+          el.addEventListener("click", invoker, false)
+        }
+      }
+    </script>
+  </body>
+</html>
